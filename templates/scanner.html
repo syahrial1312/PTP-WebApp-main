@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Monitoring</title>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 0;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #1aa263;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .navbar .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .menu-icon {
+            font-size: 26px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background: #1aa263;
+            padding-top: 60px;
+            transition: 0.3s;
+            z-index: 1100; /* Lebih tinggi dari scanner */
+            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .sidebar a:hover {
+            background: #0056b3;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1050; /* Tepat di bawah sidebar */
+        }
+
+        /* Main content */
+        .container {
+            margin-top: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .scanner-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+            z-index: 100;
+        }
+
+        #reader {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #1aa263;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .menu-icon {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{{url_for('dashboard')}}">
+                <img src="{{ url_for('static', filename='image/Taro.png') }}" alt="Logo">
+            </a>
+        </div>
+        <div class="logo">Machine Maintenance </div>
+        <div class="menu-icon" onclick="openSidebar()">&#9776;</div>
+    </nav>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar" id="sidebar">
+        <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">x</a>
+        <a href="#">Log in</a>
+        <a href="#">QR Scanner</a>
+        <a href="#">About</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>QR Code Scanner</h1>
+        <div class="scanner-container">
+            <div id="reader"></div>
+            <p id="result">Scan a QR code!</p>
+            <p class="loading" id="loading">🔄 Redirecting...</p>
+        </div>
+    </div>
+
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.left = "0";
+            document.getElementById("overlay").style.display = "block"; // Aktifkan overlay
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.left = "-250px";
+            document.getElementById("overlay").style.display = "none"; // Hilangkan overlay
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            document.getElementById("result").innerText = `Hasil Scan: ${decodedText}`;
+            link="http://machine/{decodedText}"
+            // Jika QR Code adalah link, redirect ke URL
+            if (decodedText.startsWith("http://") || decodedText.startsWith("https://")) {
+                document.getElementById("loading").style.display = "block"; // Tampilkan animasi loading
+                setTimeout(() => {
+                    window.location.href = decodedText;
+                }, 1500);
+            }
+            setTimeout(() => {
+                window.location.href = link;
+            }, 1500);
+            console.log(`Code matched = ${decodedText}`, decodedResult);
+        }
+
+        function onScanFailure(error) {
+            console.warn(`Code scan error = ${error}`);
+        }
+
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            false
+        );
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    </script>
+
+</body>
+</html>

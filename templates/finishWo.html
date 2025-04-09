@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WO Process</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/finishWo.css') }}">
+</head>
+<body>
+    <head> WO Process </head>
+    <div class="container">
+        <section>
+            <br>Mesin : {{wo[1]}}
+            <br>Waktu Laporan : {{wo[2],wo[3]}}
+            <br>Deskripsi : {{wo[4]}}
+            <br>Request By : {{wo[5]}}
+        </section>
+        <section>
+            <form method="POST">
+                {{form.hidden_tag()}}
+                <br><label>Jam Mulai</label> <input type="time" name="jam_mulai" required> 
+                <br><label>Jam Selesai</label> <input type="time" name="jam_selesai" required>
+                
+                <!--Tabel Sparepart Digunakan-->
+                <br><input type="text" id="searchBar" placeholder="Cari sparepart..." onkeyup="searchTable()">
+                <h2>Sparepart yang Dipilih</h2>
+                <table id="selectedSparepartTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>ID Sparepart</th>
+                            <th>Nama Sparepart</th>
+                            <th>Qty</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                
+                <!--Tabel List Sparepart-->
+                <h2 id="databaseTitle" style="display: none;">Database Sparepart</h2>
+                <table id="databaseSparepartTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>ID Sparepart</th>
+                            <th>Nama Sparepart</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="databaseBody"></tbody>
+                </table>
+
+                <br><button type="submit" class="btn btn-success"> Selesaikan WO</button>
+                <a href={{url_for("workorder")}} class="btn btn-secondary">Kembali<a>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        let spareparts = {{ spareparts | tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='js/finishWo.js') }}">
+    </script>
+
+
+
+</body>
+</html>

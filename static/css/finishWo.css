@@ -1,0 +1,30 @@
+body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            padding: 5px;
+            border: none;
+        }

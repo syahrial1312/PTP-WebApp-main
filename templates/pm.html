@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Preventive Maintenance</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1aa263;
+      color: white;
+      padding: 15px 20px;
+    }
+    .header .logo img {
+      width: auto;
+      height: 75px;
+    }
+  </style>
+  <body>
+    <div class="header">
+      <div class="logo">
+        <a href="{{url_for('dashboard')}}">
+          <img
+            src="{{ url_for('static', filename='image/Taro.png') }}"
+            alt="Logo"
+          />
+        </a>
+      </div>
+      <h2 class="text-center">Preventive Maintenance</h2>
+    </div>
+    <div class="container mt-5">
+      
+      <!--<p>Selamat datang di halaman Preventive Maintenance</p>-->
+      <br>
+      <h3>Jadwal Maintenance Mendatang</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Tipe PM</th>
+            <th>Mesin</th>
+            {%if role[0]== "master"%}
+            <th></th>
+            {%endif%}
+          </tr>
+        </thead>
+        <tbody>
+          {% for data in pm%}
+          <tr>
+            <td>{{ data[0] }}</td>
+            <td>{{ data[1] }}</td>
+            <td><a href='machine/{{data[4]}}'>{{ data[2] }} L{{data[3]}}</td>
+              <!--<td>{{ pm[3] }}</td>-->
+              {%if role[0]== "master"%}
+              <td><a href="pm/edit/{{data[5]}}" class="btn btn-secondary">Edit</td>
+              {%endif%}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {%if role[0] == "master"%}
+        <a href="/pm/add" class="btn btn-primary">Add PM</a>
+      {%endif%}
+      </div>
+  </body>
+</html>
