@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparepart Edit</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/Taro.png') }}" type="image/jpeg">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}" />
+    <link rel="stylesheet" href="static/css/styles.css" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <style>
+        .main-container {
+            margin-left: 0;
+              padding: 60px 10px 10px;
+          }
+
+          .header {
+            position: relative;
+            margin: 2px; /* Sama seperti .section-box */
+            width: auto; /* Tidak memaksakan full width */
+            padding: 15px; /* Disamakan juga padding-nya */
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            top: 0;
+            left: 0;
+            z-index: 1;
+          }
+
+          /* Section Box */
+            .section-box {
+              background-color: #fff;
+              margin-top: 25px;
+              padding: 20px 25px;
+              border-radius: 12px;
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+          .section-box:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        form input,
+        form select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button[type="submit"] {
+                padding: 12px;
+                background-color: #4a90e2;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                font-weight: bold;
+                font-size: 15px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            button[type="submit"]:hover {
+                background-color: #357abd;
+            }
+            .btn {
+              border: none;
+              padding: 8px 16px;
+              border-radius: 8px;
+              font-weight: 500;
+              cursor: pointer;
+              transition: background 0.2s ease;
+            }
+            .btn-secondary {
+              background-color: #6c757d;
+              color: white;
+            }
+
+            .btn-secondary:hover {
+              background-color: #5a6268;
+            }
+            @media (max-width: 768px) {
+              .main-container {
+                margin-left: 0;
+                  padding: 60px 10px 10px;
+              }
+
+              .header {
+                position: relative;
+                margin: 2px; /* Sama seperti .section-box */
+                  width: auto; /* Tidak memaksakan full width */
+                  padding: 15px; /* Disamakan juga padding-nya */
+                border-radius: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                top: 0;
+                left: 0;
+                z-index: 1;
+              }
+
+              .section-box {
+                padding: 15px;
+                margin: 10px;
+              }
+        }
+
+        .success {
+            color: green;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="header text-center">
+            <h2>Form Edit Sparepart</h2>
+        </div>
+        <div class="section-box">
+
+            <form method="POST">
+
+                <label for="nama">Nama Sparepart:</label>
+                <input type="text" name="nama" id="" value="{{sparepart[1]}}">
+
+                <label for="spesifikasi">Spesifikasi:</label>
+                <input type="text" name="spesifikasi" id="" value="{{sparepart[2]}}">
+
+                <label for="Satuan">Satuan:</label>
+                <input type="text" name="satuan" id="" value="{{sparepart[3]}}">
+
+            </form>
+        </div>
+        <div class="section-box" style="text-align: center ;">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+            <a href="/sparepart" class="btn btn-secondary">kembali</a>
+        </div>
+    </div>
+</body>
+
+</html>
