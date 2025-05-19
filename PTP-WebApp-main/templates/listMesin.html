@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Listing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename ='css/styles.css') }}"/>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        /* Font */
+        body {
+          font-family: 'Poppins', sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f3f4f6;
+          color: #333;
+          line-height: 1.6;
+        }
+
+        /* Main Container */
+        .main-container {
+          padding: 30px;
+        }
+
+        /* Header */
+        .header {
+          background-color: var(--Hijau-Taro);
+          color: white;
+          padding: 25px;
+          border-radius: 12px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          margin-top: 0;
+
+          height: 80px;
+          transition: margin-left 0.4s ease;
+        }
+
+        /* Section Box */
+        .section-box {
+          background-color: #fff;
+          margin-top: 25px;
+          padding: 20px 25px;
+          border-radius: 12px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .section-box:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-box {
+          background-color: #fff;
+          border-radius: 10px;
+          padding: 20px;
+          margin: 20px auto;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          max-width: 1200px;
+        }
+
+        .filters select {
+          margin: 0 10px;
+          padding: 6px 12px;
+          border-radius: 6px;
+          border: 1px solid #ccc;
+        }
+
+        .machine-grid {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+          justify-content: center;
+        }
+
+        .card {
+          width: 200px;
+          background-color: #fdfdfd;
+          border-radius: 10px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+          padding: 15px;
+          text-align: center;
+          transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+          transform: translateY(-5px);
+        }
+
+        .card-image img {
+          max-width: 100%;
+          border-radius: 8px;
+        }
+
+        .btn {
+          margin-top: 10px;
+          padding: 8px 14px;
+          background-color: #007bff;
+          border: none;
+          color: white;
+          border-radius: 6px;
+          cursor: pointer;
+        }
+
+        .btn:hover {
+          background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+          .main-container {
+            margin-left: 0;
+              padding: 60px 10px 10px;
+          }
+
+          .header {
+            position: relative;
+            margin: 2px; /* Sama seperti .section-box */
+              width: auto; /* Tidak memaksakan full width */
+              padding: 15px; /* Disamakan juga padding-nya */
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            top: 0;
+            left: 0;
+            z-index: 1;
+
+             /* Tambahan untuk center text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+          }
+
+          .section-box {
+            padding: 15px;
+            margin: 10px;
+          }
+          .card {
+          width: 100px;
+          }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Sidebar Menu Button -->
+    <button class="sidebar-menu-button">
+      <span class="material-symbols-rounded">menu</span>
+    </button>
+    <aside class="sidebar">
+      <!-- Sidebar Header -->
+      <header class="sidebar-header">
+        <a href="{{url_for('dashboard')}}" class="header-logo">
+          <img src="{{url_for('static', filename='image/Taro.png')}}" alt="Logo" />
+        </a>
+        <button class="sidebar-toggler">
+          <span class="material-symbols-rounded">chevron_left</span>
+        </button>
+        <button class="toggler menu-toggler">
+          <span class="material-symbols-rounded">menu</span>
+        </button>
+      </header>
+      <nav class="sidebar-nav">
+        <!-- Primary Top Nav -->
+        <ul class="nav-list primary-nav">
+            {% if role == "maintenance" or role=="admin" %}
+
+            <!--Dashboard-->
+          <li class="nav-item">
+            <a href="{{url_for('dashboard')}}" class="nav-link">
+              <span class="material-symbols-rounded">dashboard</span>
+              <span class="nav-label">Dashboard</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="nav-item"><a class="nav-link dropdown-title">Dashboard</a></li>
+            </ul>
+          </li>
+
+          <!-- Preventive Maintenance -->
+          <li class="nav-item dropdown-container">
+            <a href="{{url_for('pm')}}" class="nav-link dropdown-toggle">
+              <span class="material-symbols-rounded">calendar_today</span>
+              <span class="nav-label">Preventive Maintenance</span>
+              <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
+            </a>
+            <!-- Dropdown Menu -->
+            <ul class="dropdown-menu">
+              <li class="nav-item"><a class="nav-link dropdown-title">Preventive Maintenance</a></li>
+              <li class="nav-item"><a href="{{url_for('historyPM')}}" class="nav-link dropdown-link">History Maintenance</a></li>
+              <li class="nav-item"><a href="{{url_for('pm')}}" class="nav-link dropdown-link">Plan Maintenance</a></li>
+              <li class="nav-item"><a href="{{url_for('sparepart')}}" class="nav-link dropdown-link">Sparepart</a></li>
+            </ul>
+          </li>
+
+          <!-- Corrective Maintenance -->
+          <li class="nav-item dropdown-container">
+            <a href="{{url_for('correctiveMaintenance')}}" class="nav-link dropdown-toggle">
+              <span class="material-symbols-rounded">star</span>
+              <span class="nav-label">Corrective Maintenance</span>
+              <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
+            </a>
+            <!-- Dropdown Menu -->
+            <ul class="dropdown-menu">
+              <li class="nav-item"><a class="nav-link dropdown-title">Corrective Maintenance</a></li>
+              <li class="nav-item"><a href="{{url_for('historyCorrectiveMaintenance')}}" class="nav-link dropdown-link">Report</a></li>
+              <li class="nav-item"><a href="{{url_for('correctiveMaintenance')}}" class="nav-link dropdown-link">Input</a></li>
+            </ul>
+          </li>
+
+            <!--Scanner-->
+          <li class="nav-item">
+            <a href="{{url_for('scanner')}}" class="nav-link">
+              <span class="material-symbols-rounded">notifications</span>
+              <span class="nav-label">Scanner</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="nav-item"><a class="nav-link dropdown-title">Scanner</a></li>
+            </ul>
+          </li>
+
+          {% endif %}
+
+            <!--Detail Mesin-->
+          <li class="nav-item">
+            <a href="{{url_for('machine')}}" class="nav-link">
+              <span class="material-symbols-rounded">local_library</span>
+              <span class="nav-label">Detail Mesin</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="nav-item"><a class="nav-link dropdown-title">Detail Mesin</a></li>
+            </ul>
+          </li>
+
+            <!--LogOut-->
+          <li class="nav-item">
+            <a href="{{ url_for('logout') }}" class="nav-link">
+              <span class="material-symbols-rounded">logout</span>
+              <span class="nav-label">Sign Out</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="nav-item"><a href="{{ url_for('logout') }}" class="nav-link dropdown-title">Sign Out</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <div class="main-container" id="mainContainer">
+
+        <div class="header text-center fade-in-scroll">
+            <h2>List Detail Mesin</h2>
+        </div>
+
+      <!-- Section Filter -->
+      <div class="section-box">
+        <h3 class="text-center">Filter Mesin</h3>
+        <div class="filters text-center">
+          <label for="line-filter">Filter:</label>
+
+          <select id="line-filter">
+            <option value="all">Semua Line</option>
+            {% for line in line_list %}
+              <option value="{{ line }}">Line {{ line }}</option>
+            {% endfor %}
+          </select>
+
+          <select id="category-filter">
+            <option value="all">Semua Tipe Mesin</option>
+            {% for kategori in kategori_mesin.keys() %}
+              <option value="{{ kategori }}">{{ kategori }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <!-- Section Mesin -->
+      <div class="section-box">
+        <h3 class="text-center">Daftar Mesin</h3>
+        <div class="container machine-grid">
+          {% for kategori, mesin_list in kategori_mesin.items() %}
+            {% for m in mesin_list %}
+            <div class="card" data-line="{{ m[2] }}" data-category="{{ kategori }}">
+              <div class="card-image">
+                <a href="machine/{{ m[0] }}" class="machine{{ m[0] }}">
+                  <img src="static/image/{{ m[3] }}.png" alt="{{ m[3] }}">
+                </a>
+              </div>
+              <h4>{{ m[1] }} L{{ m[2] }}</h4>
+              <p>{{ m[3] }}</p>
+              <a href="machine/{{ m[0] }}">
+                <button class="btn">View Details</button>
+              </a>
+            </div>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static',filename='js/scripts.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const lineFilter = document.getElementById("line-filter");
+            const categoryFilter = document.getElementById("category-filter");
+            const machines = document.querySelectorAll(".card");
+
+            function filterMachines() {
+                const selectedLine = lineFilter.value;
+                const selectedCategory = categoryFilter.value;
+
+                machines.forEach(machine => {
+                    const machineLine = machine.getAttribute("data-line");
+                    const machineCategory = machine.getAttribute("data-category");
+
+                    // Cek apakah mesin cocok dengan filter yang dipilih
+                    const matchLine = (selectedLine === "all" || machineLine === selectedLine);
+                    const matchCategory = (selectedCategory === "all" || machineCategory === selectedCategory);
+
+                    // Jika sesuai dengan filter, tampilkan; jika tidak, sembunyikan
+                    if (matchLine && matchCategory) {
+                        machine.style.display = "block";
+                    } else {
+                        machine.style.display = "none";
+                    }
+                });
+            }
+
+            // Event listener saat filter berubah
+            lineFilter.addEventListener("change", filterMachines);
+            categoryFilter.addEventListener("change", filterMachines);
+        });
+        </script>
+</body>
+</html>

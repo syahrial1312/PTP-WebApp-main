@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WO Process</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        /* Font */
+        body {
+          font-family: 'Poppins', sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f3f4f6;
+          color: #333;
+          line-height: 1.6;
+        }
+
+        /* Main Container */
+        .main-container {
+          max-width:100%;
+          padding: 30px;
+          margin: 40px auto; /* mengikuti sidebar */
+          transition: margin-left 0.4s ease;
+        }
+
+        /* Header */
+        .header {
+          max-width: 100%;
+          background-color: var(--Hijau-Taro);
+          color: white;
+          padding: 25px;
+          border-radius: 12px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          margin-top: 0;
+          width: auto;
+          height: 80px;
+          transition: margin-left 0.4s ease;
+        }
+
+        /* Section Box */
+        .section-box {
+          max-width:100%;
+          background-color: #fff;
+          margin-top: 25px;
+          padding: 20px 25px;
+          border-radius: 12px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .section-box:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+        /* Typography & Layout */
+        h2 {
+          font-size: 24px;
+          margin-bottom: 20px;
+          font-weight: 600;
+          color: #1f2937;
+        }
+
+        h3 {
+          font-size: 20px;
+          margin-top: 30px;
+          margin-bottom: 10px;
+          font-weight: 600;
+          color: #374151;
+        }
+
+        p {
+          margin-bottom: 10px;
+          font-size: 15px;
+        }
+
+        /* Form Elements */
+        label {
+          font-weight: 500;
+          display: block;
+          margin-bottom: 6px;
+        }
+
+        input[type="time"],
+        input[type="text"] {
+          width: auto;
+          padding: 10px 12px;
+          border: 1px solid #cbd5e1;
+          border-radius: 8px;
+          background-color: #f9fafb;
+          font-size: 14px;
+          margin-bottom: 15px;
+          transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="time"]:focus {
+          outline: none;
+          border-color: var(--Hijau-Taro, #10b981);
+          background-color: #ffffff;
+        }
+
+        /* Buttons */
+        .btn {
+          display: inline-block;
+          padding: 10px 18px;
+          font-size: 14px;
+          font-weight: 500;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          text-decoration: none;
+          transition: background-color 0.2s ease;
+        }
+
+        .btn-success {
+          background-color: #10b981;
+          color: #ffffff;
+        }
+
+        .btn-success:hover {
+          background-color: #059669;
+        }
+
+        .btn-secondary {
+          background-color: #64748b;
+          color: #ffffff;
+          margin-left: 10px;
+        }
+
+        .btn-secondary:hover {
+          background-color: #475569;
+        }
+
+        /* Table Styling */
+        table {
+          width: auto;
+          border-collapse: collapse;
+          font-size: 14px;
+          margin-top: 10px;
+        }
+
+        table thead {
+          background-color: #f1f5f9;
+          font-weight: 600;
+        }
+
+        table th,
+        table td {
+          text-align: left;
+          padding: 12px 10px;
+          border-bottom: 1px solid #e5e7eb;
+        }
+
+        table tr:hover {
+          background-color: #f9fafb;
+        }
+        .table.table-bordered {
+            table-layout: auto; /* biar layout fleksibel */
+            width: 100%; /* td bisa mengisi sisa ruang */
+            border-collapse: collapse;
+        }
+
+        .table.table-bordered th {
+            white-space: nowrap; /* agar lebarnya hanya sesuai isi */
+            width: 40%; /* paksa browser hanya ambil secukupnya */
+            text-align: center;           /* horizontal: kiri */
+            vertical-align: middle ;  /* atau center sesuai kebutuhan */
+            border: 1px solid #000;
+            padding: 8px;
+        }
+        .table.table-bordered td {
+            width: auto; /* biarkan td fleksibel */
+            border: 1px solid #000;
+            padding: 8px;
+        }
+        .table.my-table-bordered {
+            table-layout: auto; /* biar layout fleksibel */
+            width: 100%; /* td bisa mengisi sisa ruang */
+            border-collapse: collapse;
+            text-align: center;
+        }
+        .table.my-table-bordered th {
+            white-space: nowrap; /* agar lebarnya hanya sesuai isi */
+            width: 40%; /* paksa browser hanya ambil secukupnya */
+            text-align: center;           /* horizontal: kiri */
+            vertical-align: middle ;  /* atau center sesuai kebutuhan */
+            border: 0 solid #000;
+            padding: 8px;
+        }
+        .table.my-table-bordered td {
+            width: auto; /* biarkan td fleksibel */
+            border: 0 solid #000;
+            padding: 8px;
+            text-align: center;
+        }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        #selectedSparepartTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #selectedSparepartTable th,
+        #selectedSparepartTable td {
+            text-align: center;
+            padding: 8px;
+            border: 1px solid #000;
+            white-space: nowrap; /* supaya teks tidak membungkus */
+        }
+        #databaseSparepartTable{
+            width: 100%;
+        }
+        #databaseSparepartTable th, #databaseSparepartTable td{
+            text-align: center;
+            padding: 8px;
+            border:1px solid#000;
+            white-space: nowrap;
+        }
+        @media (max-width:768px){
+            .table{
+                font-size: 11px;
+            }
+            .table-bordered{
+                font-size: 11px;
+            }
+            .myHeader{
+                text-align: center;
+            }
+            .table-responsive{
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+
+        <div class="header text-center fade-in-scroll">
+            <h2>Edit Corrective Maintenance</h2>
+        </div>
+
+        <!--Informasi Laporan-->
+        <div class="section-box ">
+            <div class="myHeader">
+                <h3>Informasi Laporan</h3>
+            </div>
+
+              <table class="table table-bordered">
+                <tr>
+                  <th>Mesin</th>
+                  <td>:{{wo[1]}}</td>
+                </tr>
+                <tr>
+                  <th>Tanggal Laporan</th>
+                  <td>
+                    :{{wo[2]}}
+                  </td>
+                </tr>
+                <tr>
+                  <th>Deskripsi</th>
+                  <td>
+                    :{{wo[3]}}
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                      <div class="centered-left">Request By</div>
+                  </th>
+                  <td>
+                    :{{wo[4]}}
+                  </td>
+                </tr>
+              </table>
+
+        </div>
+
+
+        <!--Form Penyelesaian Laporan-->
+        <form method="POST">
+        <div class="section-box text-center">
+            <h3>Form Penyelesaian Laporan</h3>
+
+                {{form.hidden_tag()}}
+                <table class="table my-table-bordered">
+                <tr>
+                  <th><label><strong>Tanggal</strong></label></th>
+                  <td>
+                      <label>
+                        <input type="date" name="tanggalDikerjakan" required>
+                      </label>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label><strong>Jam Mulai</strong></label></th>
+                  <td>
+                      <label>
+                          <input type="time" name="jam_mulai" required>
+                      </label>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label><strong>Jam Selesai</strong></label></th>
+                  <td>
+                      <label>
+                          <input type="time" name="jam_selesai" required>
+                      </label>
+                  </td>
+                </tr>
+              </table>
+                <!--
+                <label>Jam Mulai</label><br>
+                <input type="time" name="jam_mulai" required><br><br>
+
+                <label>Jam Selesai</label><br>
+                <input type="time" name="jam_selesai" required><br><br>-->
+            <br>
+            <!-- Input Search -->
+            <input type="text" id="searchBar" placeholder="Cari sparepart..." onkeyup="searchTable()"><br>
+
+            <!-- Tabel Sparepart Terpilih -->
+                <h3>Sparepart yang Dipilih</h3>
+                <div class="table-responsive">
+                    <table id="selectedSparepartTable" border="1" cellpadding="5" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>ID Sparepart</th>
+                            <th>Nama Sparepart</th>
+                            <th>Qty</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                </div>
+
+
+                <!-- Tabel Database Sparepart -->
+                <h3 id="databaseTitle" style="display: none;">Database Sparepart</h3>
+                <div class="table-responsive">
+                    <table id="databaseSparepartTable" border="1" cellpadding="5" cellspacing="0" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>ID Sparepart</th>
+                            <th>Nama Sparepart</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="databaseBody"></tbody>
+                </table>
+                </div>
+
+                <br>
+
+        </div>
+
+        <div class="section-box text-center">
+            <button type="submit" class="btn btn-success">Selesaikan WO</button>
+            <a href="{{url_for('correctiveMaintenance')}}" class="btn btn-secondary">Kembali</a>
+        </div>
+        </form>
+    </div>
+
+    <script>
+        let spareparts = {{ spareparts | tojson }};
+    </script>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        {% for category, message in messages %}
+          Swal.fire({
+            icon: "{{ category }}",
+            title: "{{ message }}",
+            showConfirmButton: false,
+            timer: 2000
+          });
+        {% endfor %}
+      });
+    </script>
+  {% endif %}
+{% endwith %}
+    <script src="{{ url_for('static', filename='js/finishWo.js') }}">
+    </script>
+
+
+
+</body>
+</html>
