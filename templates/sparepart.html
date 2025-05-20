@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>List Sparepart</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/Taro.png') }}" type="image/jpeg">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <!-- DataTables CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+        <!-- DataTables JS -->
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        /* Font */
+        body {
+          font-family: 'Poppins', sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f3f4f6;
+          color: #333;
+          line-height: 1.6;
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-left: 0;
+              padding: 60px 10px 10px;
+          }
+
+        /* Header */
+        .header {
+          background-color: var(--Hijau-Taro);
+          color: white;
+          padding: 25px;
+          border-radius: 12px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          margin-top: 0;
+
+          height: 80px;
+          transition: margin-left 0.4s ease;
+        }
+
+        /* Section Box */
+        .section-box {
+          background-color: #fff;
+          margin-top: 25px;
+          padding: 20px 25px;
+          border-radius: 12px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .section-box:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+        .table-responsive{
+                width: 100%;
+                overflow-x: auto;
+                overflow-y:auto;
+                height:300px;
+                white-space: nowrap;
+            }
+        .table-responsive table thead th{
+            position: sticky;
+            top: 0;
+            background-color: #3498db;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        /* Table Style */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        thead {
+
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tbody tr:hover {
+            background-color: #eaf4ff;
+        }
+
+        a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .delete{
+            color: #d71f1f
+        }
+
+        .edit{
+            color:#219150
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        button[type="submit"]{
+            color: #d71f1f
+        }
+        /* Tombol Tambah */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #27ae60;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #219150;
+        }
+
+        /* Back Link */
+        .container>a:last-child {
+            display: inline-block;
+            margin-top: 20px;
+            color: #555;
+        }
+        @media (max-width: 768px) {
+              .main-container {
+                margin-left: 0;
+                  padding: 60px 10px 10px;
+              }
+
+              .header {
+                position: relative;
+                margin: 2px; /* Sama seperti .section-box */
+                  width: auto; /* Tidak memaksakan full width */
+                  padding: 15px; /* Disamakan juga padding-nya */
+                border-radius: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                top: 0;
+                left: 0;
+                z-index: 1;
+              }
+
+              .section-box {
+                padding: 15px;
+                margin: 10px;
+              }
+              .btn{
+                  text-align: center;
+              }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="header">
+            <h2>List Daftar Sparepart</h2>
+        </div>
+
+        <div class="section-box">
+            <div style="text-align: center">
+                <a class="btn" href="{{ url_for('sparepart_add') }}">+ Tambah Sparepart</a><br>
+            </div>
+            <div class="table-responsive">
+                <table id="sparepartTable" class="table table-striped" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>ID</th>
+                        <th>Nama</th>
+                        <th>Spesfikasi</th>
+                        <th>Satuan</th>
+                        <th>Aksi</th>
+                    </tr>
+                    </thead>
+                <tbody>
+                    {% for part in spareparts %}
+                    <tr>
+                        <td></td>
+                        <td>{{ part[0] }}</td>
+                        <td>{{ part[1] }}</td>
+                        <td>{{ part[2] }}</td>
+                        <td>{{ part[3] }}</td>
+                        <td>
+                            <form method="POST">
+                                <a href="/sparepart/edit/{{part[0]}}" class="edit">Edit</a>
+                                |
+                                <div class="delete">
+                                    <button type="submit" value="{{part[0]}}" name="id" onclick="return confirm('Yakin ingin menghapus?')"> Delete</button>
+                                </div>
+
+                            </form>
+                            <!-- <button name="test" value="isi" method="POST">Kirim</button> -->
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6">Belum ada data sparepart.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="section-box" style="text-align: center">
+            <a class="btn" href="{{ url_for('dashboard') }}" style="text-align: center">← Kembali</a>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        {% for category, message in messages %}
+          Swal.fire({
+            icon: "{{ category }}",
+            title: "{{ message }}",
+            showConfirmButton: false,
+            timer: 2000
+          });
+        {% endfor %}
+      });
+    </script>
+  {% endif %}
+{% endwith %}
+<script>
+          $(document).ready(function () {
+            const table = $('#sparepartTable').DataTable({
+              "order": [[1, "ascending"]],
+              "pageLength": 25,
+              "dom": 'lftip', // search box, table, info, pagination
+              "language": {
+                "zeroRecords": "Data tidak ditemukan",
+                "paginate": {
+                  "first": "Pertama",
+                  "last": "Terakhir",
+                  "next": "Berikutnya",
+                  "previous": "Sebelumnya"
+                },
+                "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                "search": "Cari:"
+              }
+            });
+
+            table.on('order.dt search.dt draw.dt', function () {
+              let i = 1;
+              table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell) {
+                cell.innerHTML = i++;
+              });
+            }).draw();
+            });
+</script>
+</body>
+
+</html>
